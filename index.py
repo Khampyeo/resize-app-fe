@@ -4,7 +4,7 @@ import requests
 import json
 from streamlit_option_menu import option_menu
 import pandas as pd
-import webbrowser
+from streamlit.components.v1 import html
 
 st.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"/>', unsafe_allow_html=True)
 
@@ -24,6 +24,15 @@ def downloadImage(key):
     except Exception as e:
         st.write(f"An error occurred during the request: {e}")
         return None
+
+def open_page(url):
+    open_script= """
+        <script type="text/javascript">
+            window.open('%s', '_blank').focus();
+        </script>
+    """ % (url)
+    html(open_script)
+
 
 def convert_epoch_to_time(epoch_time):
     return pd.to_datetime(epoch_time, unit="s")
@@ -146,7 +155,7 @@ def main():
                     btn = st.button("⬇", key=index)
                     if btn:
                         url = downloadImage(row["name"])["url"]
-                        webbrowser.open_new_tab(url)
+                        open_page(url)
 
             
 
@@ -156,5 +165,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
